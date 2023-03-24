@@ -1,14 +1,14 @@
 //Code js de la page index.html
 
-//Fonction fetch qui envoie un requête pour récupèrer les données du backend
+//Fonction fetch qui envoie un requête pour récupèrer les données du backend via l'API
 let photoFiltre = []
 async function fetchCard() {
     const response = await fetch("http://localhost:5678/api/works");
     photoFiltre = await response.json(); 
-    createCard(photoFiltre)
-    createModaleCard(photoFiltre)
+    createCard(photoFiltre);
+    createModaleCard(photoFiltre);
 } 
-fetchCard()
+fetchCard();
 
 
 //Fonction pour créer les cartes de la galerie et leur différentes caractéristiques
@@ -18,58 +18,58 @@ function createCard (article) {
         const imageElement = document.createElement("img");
         imageElement.src = article[i].imageUrl;
         imageElement.setAttribute("crossorigin", "anonymous") //pour le bug
-        imageElement.setAttribute("alt", article[i].title)
+        imageElement.setAttribute("alt", article[i].title);
         const figcaptionElement = document.createElement("figcaption");
         figcaptionElement.innerText = article[i].title;
-        figureElement.setAttribute("data-id", article[i].id)
+        figureElement.setAttribute("data-id", article[i].id);
      
         //DOM pour rattacher les éléments au html
         document.querySelector(".gallery").appendChild(figureElement);
         figureElement.appendChild(imageElement);
         figureElement.appendChild(figcaptionElement);
     }
-}
+};
 
 
 //Fonction pour filtrer la galerie en fonction de leur catégorie
 function boutonFiltrer(filter){
-    let photoFiltred = []
-    photoFiltred = photoFiltre.filter(photo => photo.category.name.startsWith(filter))
-    document.querySelector(".gallery").innerHTML = ""
-    createCard(photoFiltred)
+    let photoFiltred = [];
+    photoFiltred = photoFiltre.filter(photo => photo.category.name.startsWith(filter));
+    document.querySelector(".gallery").innerHTML = "";
+    createCard(photoFiltred);
     //Si le filtre est "tous", appel de la fonction createCard pour regénérer la galerie complète
-    if(filter === "tous") {createCard(photoFiltre)}
-}
+    if(filter === "tous") {createCard(photoFiltre)};
+};
 
 //Couleurs des boutons filtres par rapport au click de l'utilisateur
-const filtre = document.querySelectorAll(".filtre")
+const filtre = document.querySelectorAll(".filtre");
 for (let i = 0; i < filtre.length; i++) {
     const element = filtre[i];
     element.addEventListener("click", function(e) {
         //Si le bouton est déjà sélectionné ne rien faire
         if (e.target.classList.contains("filtre-selected")){
-            return
+            return;
         }
         //Sinon ajouter la classe "filtre-selected" et retirer cette classe des autres boutons
         else{
-            const boutons = document.querySelectorAll(".filtre")
+            const boutons = document.querySelectorAll(".filtre");
             for(let j = 0; j < boutons.length; j++){
-                boutons[j].classList.remove("filtre-selected")
-            }
-            e.target.classList.add("filtre-selected")
-            boutonFiltrer(e.target.value)
+                boutons[j].classList.remove("filtre-selected");
+            };
+            e.target.classList.add("filtre-selected");
+            boutonFiltrer(e.target.value);
         }
-    });
-}
+    })
+};
 
 
 //Création évènement "click" sur loginLink ("login")
 const loginLink = document.getElementById("login-link");
 loginLink.addEventListener("click", () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     //Si le token est stocké, l'utilisateur est connecté (affiche "logout" sur la page d'accueil)
     if (token != undefined) {
-        localStorage.clear("token")    
+        localStorage.clear("token");    
         window.location.href = "index.html";
         loginLink.innerText = "logout";
         
@@ -78,17 +78,17 @@ loginLink.addEventListener("click", () => {
         window.location.href = "login.html";
         loginLink.innerText = "login";
     }
-})
+});
 //Vérifie si un token est stocké dans le localStorage 
-const token = localStorage.getItem("token")
+const token = localStorage.getItem("token");
 //si connecté : affiche "logout" sur page d'accueil + fonction filtreNone
 if (token != undefined) {
         loginLink.innerText = "logout";
         filtreNone();
-        clickTrash()
+        clickTrash();
 //sinon appelle la fonction userDisconnected
 }else{
-    userDisconnected()  
+    userDisconnected();  
 }
 //Fonction qui fait disparaître les éléments de modification de la page
 function userDisconnected() {
@@ -96,42 +96,42 @@ function userDisconnected() {
     for (i = 0; i < modifier.length; i++){
         modifier[i].style.display = "none";
     }
-}
+};
 //Fonction qui fait disparaître les filtres
 function filtreNone() {
   const filtreNone = document.getElementById("filtre-liste");
   filtreNone.style.display = "none";
-}
+};
 
 
 
 //Partie fenêtre modale
 //Fonction pour ouvrir la modale
 const openModale = function (e) {
-    e.preventDefault()
-    modale = document.getElementById("sect-modale")
-    modale.style.display = "flex"
-    modale.addEventListener("click", closeModale)
-    modale.querySelector("#cross").addEventListener("click", closeModale)
-    modale.querySelector(".modale").addEventListener("click", stopPropagation)
-}
+    e.preventDefault();
+    modale = document.getElementById("sect-modale");
+    modale.style.display = "flex";
+    modale.addEventListener("click", closeModale);
+    modale.querySelector("#cross").addEventListener("click", closeModale);
+    modale.querySelector(".modale").addEventListener("click", stopPropagation);
+};
 //Fonction pour fermer la modale
 const closeModale = function (e) {
-    e.preventDefault()
-    modale.style.display = "none"
-    modale.removeEventListener("click", closeModale)
-    modale.querySelector("#cross").removeEventListener("click", closeModale)
-    modale.querySelector(".modale").removeEventListener("click", stopPropagation)
-    removeImg()
-}
+    e.preventDefault();
+    modale.style.display = "none";
+    modale.removeEventListener("click", closeModale);
+    modale.querySelector("#cross").removeEventListener("click", closeModale);
+    modale.querySelector(".modale").removeEventListener("click", stopPropagation);
+    removeImg();
+};
 //pour stopper la propagation de l'événement vers les éléments parents
 const stopPropagation= function (e) {
-    e.stopPropagation()
-}
+    e.stopPropagation();
+};
 
 document.querySelectorAll(".modifier").forEach(a => {
-    a.addEventListener("click", openModale)
-})
+    a.addEventListener("click", openModale);
+});
 
 //Fonction pour créer les cartes de la galerie dans la modale
 function createModaleCard (article) {
@@ -146,8 +146,8 @@ function createModaleCard (article) {
         const arrowMoveIcon = document.createElement("i");
         arrowMoveIcon.classList.add("fa-solid", "fa-arrows-up-down-left-right", "icone", "arrow");
         const figcaptionElement = document.createElement("figcaption");
-        figcaptionElement.innerText = "éditer"
-        figureElement.setAttribute("data-id", article[i].id)
+        figcaptionElement.innerText = "éditer";
+        figureElement.setAttribute("data-id", article[i].id);
         //DOM pour rattacher les éléments au html
         document.querySelector(".modale-gallery").appendChild(figureElement);
         figureElement.appendChild(imageElement);
@@ -155,17 +155,17 @@ function createModaleCard (article) {
         figureElement.appendChild(trashIcon);
         figureElement.appendChild(arrowMoveIcon);
     }
-}
+};
 
 //Fonction pour interchanger de modale
 const addPhotoButton = document.getElementById("bouton-ajouter");
 addPhotoButton.addEventListener("click", function() {
-    switchModaleView(true)
+    switchModaleView(true);
 });
 const backModaleArrow = document.getElementById("arrow");
 backModaleArrow.addEventListener("click", function() {
-    switchModaleView(false)
-    removeImg()
+    switchModaleView(false);
+    removeImg();
 });
 
 function switchModaleView(isListeView) {
@@ -201,18 +201,18 @@ newImage.addEventListener("change", function() {
         //supprime les autres éléments pour qu'il n'y ait que l'image
         const sendImage = document.getElementsByClassName("send-image");
         Array.from(sendImage).forEach(e => {e.style.display = "none"});
-        updateButtonColor()
+        updateButtonColor();
     }
 });
 
 //Fonction du changement de couleur du bouton valider quand image et titre sont présents
 function updateButtonColor() {
     if(newTitleImage.value != "" && newImagePreview.firstChild) {
-        validButton.style.backgroundColor = "#1D6154"
+        validButton.style.backgroundColor = "#1D6154";
     }else{
-        validButton.style.backgroundColor = ""
+        validButton.style.backgroundColor = "";
     }
-}
+};
 newTitleImage.addEventListener("input", updateButtonColor)
 
 //Fonction pour "réinitialiser" image + titre + alertes quand on quitte/change la modale   
@@ -224,12 +224,12 @@ function removeImg() {
     if(img) {newImagePreview.removeChild(img)}
     const addImageError = document.getElementById("add-image-error");
     addImageError.style.display = "none";
-}
+};
 
 validButton.addEventListener("click", (e) => {
     e.preventDefault();
     const addImageError = document.getElementById("add-image-error");
-    addImageError.style.display = "flex"
+    addImageError.style.display = "flex";
     addImageError.style.color = "red";
     // Vérifie si le champ du titre est vide
     if (newTitleImage.value === "") {
@@ -245,7 +245,7 @@ validButton.addEventListener("click", (e) => {
     const maxSize = 4 * 1024 * 1024; // 4 Mo en bytes
     const selectedFile = newImage.files[0];
     if (selectedFile.size > maxSize) {
-        addImageError.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Taille image supérieur à 4Mo`;;
+        addImageError.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Taille image supérieur à 4Mo`;
         return;
     }
     updateButtonColor();
@@ -275,7 +275,7 @@ validButton.addEventListener("click", (e) => {
     .catch(error => {
         console.error("Erreur", error);
          addImageError.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Erreur lors de l'ajout de l'image`;
-    });
+    })
 });
 
 
@@ -286,19 +286,19 @@ function clickTrash() {
     if (e.target.classList.contains("fa-trash")) {
       const figure = e.target.closest("figure");
       const dataId = figure.getAttribute("data-id");
-        confirmDelete(figure, dataId)
+        confirmDelete(figure, dataId);
     }
-  });
-}
+  })
+};
 
 //Fonctions pour confirmer/annuler la suppression d'une photo
 function confirmDelete(figure, dataId) {
     const confirmDelete = document.getElementById("third-modale");
     confirmDelete.style.display = "flex";
     const confirmNo = document.getElementById("confirm-no");
-    confirmNo.addEventListener("click", confirmNoClick)
+    confirmNo.addEventListener("click", confirmNoClick);
     const confirmYes = document.getElementById("confirm-yes");
-    confirmYes.addEventListener("click", confirmYesClick)
+    confirmYes.addEventListener("click", confirmYesClick);
     
     function confirmNoClick() {
         confirmNo.removeEventListener("click", confirmNoClick);
@@ -312,7 +312,7 @@ function confirmDelete(figure, dataId) {
         deleteImage(dataId);
         figure.remove();
     }
-}
+};
 
 function deleteImage(id) {
   fetch(`http://localhost:5678/api/works/${id}`, {
@@ -326,7 +326,7 @@ function deleteImage(id) {
         alert("Erreur lors de la suppression de l'image");
       }
     })
-}
+};
 
 //Fonction qui met à jour la galerie de manière dynamique à chaque ajout/suppression d'image
 function dynamicCard() {
@@ -335,7 +335,7 @@ function dynamicCard() {
         if(response.ok) {
             document.querySelector(".gallery").innerHTML = "";
             document.querySelector(".modale-gallery").innerHTML = "";
-            fetchCard()
+            fetchCard();
         }
     })
-}
+};
